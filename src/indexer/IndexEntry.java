@@ -14,6 +14,10 @@ public class IndexEntry<T> {
         
     }
 
+    public T getDocumentId() {
+        return documentId;
+    }
+
     public double getTermWeight() {
         return termWeight;
     }

@@ -1,8 +1,8 @@
 package indexer;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import multiTreeMap.MultiTreeMap;
 
@@ -15,7 +15,7 @@ public class Index {
         this.documents = documents;
     }
 
-    private void indexTerms(int documentId, String[] terms) {
+    public HashMap<String, IndexEntry<String>> indexTerms(String documentId, String[] terms) {
 
         HashMap<String, IndexEntry<String>> indexedTerms = new HashMap<>();
 
@@ -25,7 +25,7 @@ public class Index {
 
             if(termIndex == null) {
 
-                IndexEntry<String> indexEntry = new IndexEntry<String>("" + documentId, 1, i);
+                IndexEntry<String> indexEntry = new IndexEntry<String>(documentId, 1, i);
                 indexedTerms.put(terms[i], indexEntry);
 
             } else {
@@ -35,10 +35,23 @@ public class Index {
                 termIndex.setTermWeight(termWeight);
 
             }
+            //index.insert(terms[i], "" + documentId, indexedTerms.get(terms[i]));
+        }
+        return indexedTerms;
 
-            index.insert(terms[i], "" + documentId, indexedTerms.get(terms[i]));
+    }
+
+    private void insertIntoIndex(Set<Map.Entry<String, IndexEntry<String>>> entrySet) {
+
+        for(Map.Entry<String, IndexEntry<String>> entry : entrySet) {
+            
+            String term = (String) entry.getKey();
+            IndexEntry<String> indexEntry = (IndexEntry<String>) entry.getValue();
+
+            index.insert(term, indexEntry.getDocumentId(), indexEntry);
 
         }
+            
     }
 
     public void index() {
@@ -46,7 +59,9 @@ public class Index {
         for (int i = 0; i < documents.length; i++) {
 
             String[] terms = documents[i].split(" ");
-            indexTerms(i, terms);
+            HashMap<String, IndexEntry<String>> indexedTerms = indexTerms("" + i, terms);
+
+            insertIntoIndex(indexedTerms.entrySet());
 
         }
         System.out.println(index);
