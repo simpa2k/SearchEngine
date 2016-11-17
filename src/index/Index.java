@@ -1,6 +1,7 @@
 package index;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ public class Index {
     private String[] documents;
     private Indexer indexer = new Indexer();
 
-    MultiTreeMap<String, String, IndexEntry<String>> index = new MultiTreeMap<>();
+    MultiTreeMap<String, IndexEntry<String>> index = new MultiTreeMap<>();
 
     public Index(String[] documents) {
         this.documents = documents;
@@ -24,7 +25,7 @@ public class Index {
             String term = (String) entry.getKey();
             IndexEntry<String> indexEntry = (IndexEntry<String>) entry.getValue();
 
-            index.insert(term, indexEntry.getDocumentId(), indexEntry);
+            index.insert(term, indexEntry);
 
         }
     }
@@ -33,7 +34,7 @@ public class Index {
         insertIntoIndex(indexer.index(documents));
     }
 
-    public HashMap<String, IndexEntry<String>> get(String term) {
-       return index.getAll(term); 
+    public HashSet<IndexEntry<String>> get(String term) {
+       return index.get(term); 
     }
 }

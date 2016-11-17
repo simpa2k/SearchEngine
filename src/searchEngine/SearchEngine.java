@@ -1,6 +1,7 @@
 package searchEngine;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,8 +35,9 @@ public class SearchEngine {
             String queryTerm = (String) queryTermEntry.getKey();
             IndexEntry<String> indexedTerm = queryTermEntry.getValue();
 
-            HashMap<String, IndexEntry<String>> documentsIncludingQueryTerm = index.get(queryTerm);
+            HashSet<IndexEntry<String>> documentsIncludingQueryTerm = index.get(queryTerm);
             System.out.println(documentsIncludingQueryTerm);
+
         }
         
     }

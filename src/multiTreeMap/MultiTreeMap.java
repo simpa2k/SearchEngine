@@ -1,36 +1,30 @@
 package multiTreeMap;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.TreeMap;
 
-public class MultiTreeMap<K1 extends Comparable<K1>, K2, V> {
+public class MultiTreeMap<K extends Comparable<K>, V> {
 
-    private TreeMap<K1, HashMap<K2, V>> treeMap = new TreeMap<>();
+    private TreeMap<K, HashSet<V>> treeMap = new TreeMap<>();
 
-    public void insert(K1 key1, K2 key2, V value) {
+    public void insert(K key, V value) {
 
-        HashMap<K2, V> bucket = treeMap.get(key1);
+        HashSet<V> bucket = treeMap.get(key);
         
         if(bucket == null) {
 
-            bucket = new HashMap<K2, V>();
-            bucket.put(key2, value);
+            bucket = new HashSet<V>();
+            bucket.add(value);
 
-            treeMap.put(key1, bucket);
+            treeMap.put(key, bucket);
 
         } else {
-            bucket.put(key2, value);
+            bucket.add(value);
         }
     }
 
-    public V get(K1 key1, K2 key2) {
-
-        HashMap<K2, V> bucket = treeMap.get(key1);
-        return bucket.get(key2);
-        
-    }
-
-    public HashMap<K2, V> getAll(K1 key) {
+    public HashSet<V> get(K key) {
         return treeMap.get(key);
     }
 
