@@ -1,6 +1,12 @@
 package searchEngine;
 
-import indexer.Index;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import index.Index;
+import index.IndexEntry;
+import index.Indexer;
 
 public class SearchEngine {
 
@@ -14,9 +20,23 @@ public class SearchEngine {
 
     }
 
-    private void search(String query) {
+    private Set<Map.Entry<String, IndexEntry<String>>> indexQuery(String query) {
 
+        Indexer indexer = new Indexer();
+        return indexer.index("query", query);
         
+    }
+
+    private void compareQueryToDocuments(Set<Map.Entry<String, IndexEntry<String>>> indexedQuery) {
+
+        for(Map.Entry<String, IndexEntry<String>> queryTermEntry : indexedQuery) {
+            
+            String queryTerm = (String) queryTermEntry.getKey();
+            IndexEntry<String> indexedTerm = queryTermEntry.getValue();
+
+            HashMap<String, IndexEntry<String>> documentsIncludingQueryTerm = index.get(queryTerm);
+            System.out.println(documentsIncludingQueryTerm);
+        }
         
     }
 
@@ -27,7 +47,9 @@ public class SearchEngine {
 
         String query = "a document";
 
-        searchEngine.search(query);
+        Set<Map.Entry<String, IndexEntry<String>>> indexedQuery = searchEngine.indexQuery(query);
+
+        searchEngine.compareQueryToDocuments(indexedQuery);
 
     }
 }

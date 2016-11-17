@@ -30,6 +30,10 @@ public class MultiTreeMap<K1 extends Comparable<K1>, K2, V> {
         
     }
 
+    public HashMap<K2, V> getAll(K1 key) {
+        return treeMap.get(key);
+    }
+
     @Override
     public String toString() {
         return treeMap.toString();

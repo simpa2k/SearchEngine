@@ -1,4 +1,4 @@
-package indexer;
+package index;
 
 public class IndexEntry<T> {
 
