@@ -7,12 +7,17 @@ import java.util.Set;
 
 public class Indexer {
 
-    public Set<Map.Entry<String, IndexEntry<String>>> index(String[] documents) {
+    public Set<Map.Entry<String, IndexEntry<String>>> index(Set<Map.Entry<String, String>> documentsById) {
 
         Set<Map.Entry<String, IndexEntry<String>>> indexedDocuments = new HashSet<>();
 
-        for (int i = 0; i < documents.length; i++) {
-            indexedDocuments.addAll(index("" + i, documents[i]));
+        for (Map.Entry<String, String> documentById : documentsById) {
+
+            String documentId = documentById.getKey();
+            String document = documentById.getValue();
+
+            indexedDocuments.addAll(index(documentId, document));
+
         }
 
         return indexedDocuments;

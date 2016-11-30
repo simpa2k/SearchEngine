@@ -3,6 +3,7 @@ package searchEngine;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 import index.Index;
@@ -11,9 +12,12 @@ import index.Indexer;
 
 public class SearchEngine {
 
+
+    private HashMap<String, String> documentsById = new HashMap<>();
+
     private Index index;
 
-    private void index() {
+    public SearchEngine() {
 
         String documentA = "This is DSV homepage DSV is a joint department between SU and KTH We have many good students here";
         String documentB = "Hi This is Eriks homepage at DSV a joint department owned by SU and KTH I don't play football but I have a link to Nikos at DSV";
@@ -21,9 +25,17 @@ public class SearchEngine {
         String documentD = "Hi This is Nikos homepage at DSV I like DSV but even more I like football I Nikos am a big fan of football I play football all the time And I also have a Nikos' link to Eriks page";
         String documentE = "This is AIK website We all play football here We think football rocks And we have no links to anybody else we think we are best anyway";
 
-        //String[] documents = {"Another document", "Not relevant", "A somewhat relevant document"};
-        String[] documents = {documentA, documentB, documentC, documentD, documentE};
-        index = new Index(documents);
+        documentsById.put("A", documentA);
+        documentsById.put("B", documentB);
+        documentsById.put("C", documentC);
+        documentsById.put("D", documentD);
+        documentsById.put("E", documentE);
+
+    }
+
+    private void index() {
+
+        index = new Index(documentsById.entrySet());
         index.index();
 
     }
@@ -34,16 +46,25 @@ public class SearchEngine {
         return indexer.index("query", query);
         
     }
-    private void normalize(Map<String, Double> relevanceByDocument) {
+    
+    private Map<String, Double> normalize(Map<String, Double> relevanceByDocument) {
+
+        Map<String, Double> normalizedRelevanceByDocument = new HashMap<>();
 
         for(Map.Entry<String, Double> documentRelevanceEntry : relevanceByDocument.entrySet()) {
             
             String documentId = (String) documentRelevanceEntry.getKey();
             Double documentRelevance = (Double) documentRelevanceEntry.getValue();
 
-            normalizedSimilarity = documentRelevance / 
+            String[] words = documentsById.get(documentId).split(" ");
+            int wordCount = words.length;
+
+            double normalizedSimilarity = documentRelevance / wordCount;
+            normalizedRelevanceByDocument.put(documentId, normalizedSimilarity);
 
         }
+
+        return normalizedRelevanceByDocument;
         
     }
 
@@ -75,8 +96,8 @@ public class SearchEngine {
 
         }
 
-        normalize(relevanceByDocument);
-        System.out.println(relevanceByDocument);
+        Map<String, Double> normalizedRelevanceByDocument = normalize(relevanceByDocument);
+        System.out.println(normalizedRelevanceByDocument);
        
     }
 
