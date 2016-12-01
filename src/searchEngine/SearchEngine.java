@@ -1,7 +1,9 @@
 package searchEngine;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -40,10 +42,12 @@ public class SearchEngine {
 
     }
 
-    private Set<Map.Entry<String, IndexEntry<String>>> indexQuery(String query) {
+    private List<Map.Entry<String, IndexEntry<String>>> indexQuery(String query) {
 
         Indexer indexer = new Indexer();
-        return indexer.index("query", query);
+        Set<Map.Entry<String, IndexEntry<String>>> indexedQuery = indexer.index("query", query);
+
+        return new ArrayList<Map.Entry<String, IndexEntry<String>>>(indexedQuery);
         
     }
     
@@ -68,7 +72,7 @@ public class SearchEngine {
         
     }
 
-    private void calculateNormalizedSimilarity(Set<Map.Entry<String, IndexEntry<String>>> indexedQuery) {
+    private Map<String, Double> calculateNormalizedSimilarity(List<Map.Entry<String, IndexEntry<String>>> indexedQuery) {
  
         Map<String, Double> relevanceByDocument = new HashMap<String, Double>();
 
@@ -96,14 +100,13 @@ public class SearchEngine {
 
         }
 
-        Map<String, Double> normalizedRelevanceByDocument = normalize(relevanceByDocument);
-        System.out.println(normalizedRelevanceByDocument);
+        return normalize(relevanceByDocument);
        
     }
 
-    private void calculateSimilarity(Set<Map.Entry<String, IndexEntry<String>>> indexedQuery) {
+    private Map<String, Double> calculateSimilarity(List<Map.Entry<String, IndexEntry<String>>> indexedQuery) {
 
-        calculateNormalizedSimilarity(indexedQuery);
+         return calculateNormalizedSimilarity(indexedQuery);
         
     }
 
@@ -113,9 +116,10 @@ public class SearchEngine {
         searchEngine.index();
 
         String query = "Nikos DSV";
-        Set<Map.Entry<String, IndexEntry<String>>> indexedQuery = searchEngine.indexQuery(query);
+        List<Map.Entry<String, IndexEntry<String>>> indexedQuery = searchEngine.indexQuery(query);
 
-        searchEngine.calculateSimilarity(indexedQuery);
+        Map<String, Double> relevanceByDocument = searchEngine.calculateSimilarity(indexedQuery);
+        System.out.println(relevanceByDocument);
 
     }
 }
