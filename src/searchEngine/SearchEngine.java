@@ -72,9 +72,9 @@ public class SearchEngine {
         
     }
 
-    private Map<String, Double> calculateNormalizedSimilarity(List<Map.Entry<String, IndexEntry<String>>> indexedQuery) {
+    private Map<String, Double> calculateScalarProduct(List<Map.Entry<String, IndexEntry<String>>> indexedQuery) {
  
-        Map<String, Double> relevanceByDocument = new HashMap<String, Double>();
+        Map<String, Double> scalarProductByDocument = new HashMap<String, Double>();
 
         for(Map.Entry<String, IndexEntry<String>> queryTermEntry : indexedQuery) {
             
@@ -88,20 +88,26 @@ public class SearchEngine {
                 double termWeight = document.getTermWeight() * indexedQueryTerm.getTermWeight();
 
                 String documentId = document.getDocumentId();
-                Double documentRelevance = relevanceByDocument.get(documentId);
+                Double documentRelevance = scalarProductByDocument.get(documentId);
 
                 if(documentRelevance == null) {
-                    relevanceByDocument.put(documentId, termWeight);
+                    scalarProductByDocument.put(documentId, termWeight);
                 } else {
-                    relevanceByDocument.put(documentId, termWeight + documentRelevance);
+                    scalarProductByDocument.put(documentId, termWeight + documentRelevance);
                 }
 
             }
 
         }
 
-        return normalize(relevanceByDocument);
+        return scalarProductByDocument;
        
+    }
+
+    private Map<String, Double> calculateNormalizedSimilarity(List<Map.Entry<String, IndexEntry<String>>> indexedQuery) {
+     
+        return normalize(calculateScalarProduct(indexedQuery));
+
     }
 
     private Map<String, Double> calculateSimilarity(List<Map.Entry<String, IndexEntry<String>>> indexedQuery) {
