@@ -36,4 +36,12 @@ public class Index {
     public HashSet<IndexEntry<String>> get(String term) {
        return index.get(term); 
     }
+
+    public double[] getDocumentTermVector(String documentId) {
+        
+        for(Map.Entry<String, IndexEntry<String>> entriesByTerm : index.entrySet()) {
+
+            
+        }
+    }
 }

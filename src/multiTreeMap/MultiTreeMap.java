@@ -1,6 +1,8 @@
 package multiTreeMap;
 
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class MultiTreeMap<K extends Comparable<K>, V> {
@@ -25,6 +27,10 @@ public class MultiTreeMap<K extends Comparable<K>, V> {
 
     public HashSet<V> get(K key) {
         return treeMap.get(key);
+    }
+
+    public Set<Map.Entry<K, HashSet<V>>> entrySet() {
+        return treeMap.entrySet();
     }
 
     @Override

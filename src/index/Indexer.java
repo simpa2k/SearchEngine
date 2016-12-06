@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import multiTreeMap.MultiMap;
+
 public class Indexer {
 
     public Set<Map.Entry<String, IndexEntry<String>>> index(Set<Map.Entry<String, String>> documentsById) {
@@ -36,17 +38,18 @@ public class Indexer {
 
     private HashMap<String, IndexEntry<String>> indexTerms(String documentId, int documentWordCount, String[] terms) {
 
-        HashMap<String, IndexEntry<String>> indexedTerms = new HashMap<>();
+        HashMap<String, IndexEntry<String>> entriesByTerm = new HashMap<>();
+        MultiMap<String, IndexEntry<String>> entriesByDocument = new MultiMap<>();
 
         for(int i = 0; i < terms.length; i++) {
             
             String lowercaseTerm = terms[i].toLowerCase();
-            IndexEntry<String> termIndex = indexedTerms.get(lowercaseTerm);
+            IndexEntry<String> termIndex = entriesByTerm.get(lowercaseTerm);
 
             if(termIndex == null) {
 
                 IndexEntry<String> indexEntry = new IndexEntry<>(documentId, documentWordCount, 1, i);
-                indexedTerms.put(lowercaseTerm, indexEntry);
+                entriesByTerm.put(lowercaseTerm, indexEntry);
 
             } else {
                 
@@ -55,7 +58,10 @@ public class Indexer {
                 termIndex.setTermWeight(termWeight);
 
             }
+            entriesByDocument.put(documentId, termIndex);
+
         }
-        return indexedTerms;
+
+        return HashMap<String, IndexEntry<String>>[] {entriesByTerm, entriesByDocument.toHashMap()};
     }
 }

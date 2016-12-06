@@ -110,6 +110,33 @@ public class SearchEngine {
 
     }
 
+    private double squareRootOfSumOfSquares(List<Map.Entry<String, IndexEntry<String>>> indexedTerms) {
+
+        double sum = 0;
+
+        for (Map.Entry<String, IndexEntry<String>> indexedTerm : indexedTerms) {
+            sum += Math.pow(indexedTerm.getValue().getTermWeight(), 2);
+        }
+
+        return Math.sqrt(sum);
+
+    }
+
+    private Map<String, Double> calculateCosineSimilarity(List<Map.Entry<String, IndexEntry<String>>> indexedQuery) {
+        
+        Map<String, Double> scalarProductByDocument = calculateScalarProduct(indexedQuery);
+        Map<String, Double> cosineSimilarityByDocument = new HashMap<>();
+
+        for(Map.Entry<String, Double> document : scalarProductByDocument.entrySet()) {
+
+            String documentId = document.getKey();
+            Double scalarProduct = document.getValue();
+
+            cosineSimilarityByDocument.put(documentId, squareRootOfSumOfSquares(indexedQuery) * squareRootOfSumOfSquares());
+            
+        }
+    }
+
     private Map<String, Double> calculateSimilarity(List<Map.Entry<String, IndexEntry<String>>> indexedQuery) {
 
          return calculateNormalizedSimilarity(indexedQuery);
